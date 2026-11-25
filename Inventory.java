@@ -19,4 +19,27 @@ public class Inventory {
 
         return false;
     }
+
+    public boolean removeProduct(String[] names,
+                                 int[] quantities,
+                                 int count,
+                                 String name) {
+
+        for (int i = 0; i < count; i++) {
+            if (names[i].equalsIgnoreCase(name)) {
+
+                for (int j = i; j < count - 1; j++) {
+                    names[j] = names[j + 1];
+                    quantities[j] = quantities[j + 1];
+                }
+
+                names[count - 1] = null;
+                quantities[count - 1] = 0;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
