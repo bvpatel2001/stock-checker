@@ -1,21 +1,22 @@
-
 import java.util.Scanner;
 
 public class StockChecker {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
+        Inventory inventory = new Inventory();
 
         String[] names = new String[100];
         int[] quantities = new int[100];
         int count = 0;
         int choice = 0;
 
-        while (choice != 4) {
+        while (choice != 5) {
             System.out.println("\nWelcome to Stock Checker!");
             System.out.println("1. Add Product");
             System.out.println("2. View Products");
             System.out.println("3. Check Low Stock");
-            System.out.println("4. Exit");
+            System.out.println("4. Update Quantity");
+            System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
 
             if (!input.hasNextInt()) {
@@ -42,6 +43,7 @@ public class StockChecker {
                 }
 
                 System.out.print("Enter quantity: ");
+
                 if (!input.hasNextInt()) {
                     System.out.println("Please enter a valid quantity.");
                     input.nextLine();
@@ -89,6 +91,35 @@ public class StockChecker {
                 }
             }
             else if (choice == 4) {
+                System.out.print("Enter product name: ");
+                String name = input.nextLine();
+
+                System.out.print("Enter new quantity: ");
+
+                if (!input.hasNextInt()) {
+                    System.out.println("Please enter a valid quantity.");
+                    input.nextLine();
+                    continue;
+                }
+
+                int newQuantity = input.nextInt();
+                input.nextLine();
+
+                if (newQuantity < 0) {
+                    System.out.println("Quantity cannot be negative.");
+                    continue;
+                }
+
+                boolean updated = inventory.updateQuantity(
+                    names, quantities, count, name, newQuantity);
+
+                if (updated) {
+                    System.out.println("Quantity updated!");
+                } else {
+                    System.out.println("Product not found.");
+                }
+            }
+            else if (choice == 5) {
                 System.out.println("Goodbye!");
             }
             else {
