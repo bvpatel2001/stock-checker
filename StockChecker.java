@@ -10,13 +10,14 @@ public class StockChecker {
         int count = 0;
         int choice = 0;
 
-        while (choice != 5) {
+        while (choice != 6) {
             System.out.println("\nWelcome to Stock Checker!");
             System.out.println("1. Add Product");
             System.out.println("2. View Products");
             System.out.println("3. Check Low Stock");
             System.out.println("4. Update Quantity");
-            System.out.println("5. Exit");
+            System.out.println("5. Remove Product");
+            System.out.println("6. Exit");
             System.out.print("Enter your choice: ");
 
             if (!input.hasNextInt()) {
@@ -30,22 +31,17 @@ public class StockChecker {
 
             if (choice == 1) {
                 if (count == 100) {
-                    System.out.println("Product list is full.");
+                    System.out.println("Inventory is full.");
                     continue;
                 }
 
                 System.out.print("Enter product name: ");
                 String name = input.nextLine();
 
-                if (name.trim().isEmpty()) {
-                    System.out.println("Product name cannot be empty.");
-                    continue;
-                }
-
                 System.out.print("Enter quantity: ");
 
                 if (!input.hasNextInt()) {
-                    System.out.println("Please enter a valid quantity.");
+                    System.out.println("Invalid quantity.");
                     input.nextLine();
                     continue;
                 }
@@ -54,34 +50,31 @@ public class StockChecker {
                 input.nextLine();
 
                 if (quantity < 0) {
-                    System.out.println("Quantity cannot be negative.");
-                    continue;
+                    System.out.println("Invalid quantity.");
                 }
-
-                names[count] = name;
-                quantities[count] = quantity;
-                count++;
-
-                System.out.println("Product added!");
+                else {
+                    names[count] = name;
+                    quantities[count] = quantity;
+                    count++;
+                    System.out.println("Product added.");
+                }
             }
             else if (choice == 2) {
                 if (count == 0) {
-                    System.out.println("No products added yet.");
-                } else {
+                    System.out.println("No products available.");
+                }
+                else {
                     for (int i = 0; i < count; i++) {
-                        System.out.println(names[i] + " - " +
-                                           quantities[i]);
+                        System.out.println(names[i] + ": " + quantities[i]);
                     }
                 }
             }
             else if (choice == 3) {
-                System.out.println("Low Stock Products:");
                 boolean found = false;
 
                 for (int i = 0; i < count; i++) {
                     if (quantities[i] < 5) {
-                        System.out.println(names[i] + " - " +
-                                           quantities[i]);
+                        System.out.println(names[i] + ": " + quantities[i]);
                         found = true;
                     }
                 }
@@ -97,7 +90,7 @@ public class StockChecker {
                 System.out.print("Enter new quantity: ");
 
                 if (!input.hasNextInt()) {
-                    System.out.println("Please enter a valid quantity.");
+                    System.out.println("Invalid quantity.");
                     input.nextLine();
                     continue;
                 }
@@ -105,21 +98,26 @@ public class StockChecker {
                 int newQuantity = input.nextInt();
                 input.nextLine();
 
-                if (newQuantity < 0) {
-                    System.out.println("Quantity cannot be negative.");
-                    continue;
+                if (inventory.updateQuantity(names, quantities, count, name, newQuantity)) {
+                    System.out.println("Quantity updated.");
                 }
-
-                boolean updated = inventory.updateQuantity(
-                    names, quantities, count, name, newQuantity);
-
-                if (updated) {
-                    System.out.println("Quantity updated!");
-                } else {
-                    System.out.println("Product not found.");
+                else {
+                    System.out.println("Product not found or invalid quantity.");
                 }
             }
             else if (choice == 5) {
+                System.out.print("Enter product name: ");
+                String name = input.nextLine();
+
+                if (inventory.removeProduct(names, quantities, count, name)) {
+                    count--;
+                    System.out.println("Product removed.");
+                }
+                else {
+                    System.out.println("Product not found.");
+                }
+            }
+            else if (choice == 6) {
                 System.out.println("Goodbye!");
             }
             else {
